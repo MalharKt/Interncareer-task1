@@ -1,0 +1,55 @@
+pipeline {
+    agent any
+
+    environment {
+        registryCredential = '8eece606-17a7-4345-b415-9b9e670f9df1' // DockerHub credentials ID
+        dockerImage = 'weather-app-v1:latest' // Docker image name and tag
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    // Cloning the Git repository
+                    git branch: 'master', credentialsId: 'efd76673-c51d-41e8-9f65-fc2698e28799', url: 'https://github.com/MalharKt/Internship-task-1.git'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                    def dockerImage
+                    // Building Docker image
+                    dockerImage = docker.build("weather-app-v1")
+                }
+            }
+        }
+
+        stage('Login Tag and Push to Docker Registry') {
+            steps {
+                script {
+                    // Login to Docker Hub using credentials
+                    withCredentials([usernamePassword(credentialsId: registryCredential, usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+                        sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
+                    }
+
+                    // Tag the Docker image
+                    sh 'docker tag weather-app-v1 malhar0504/my-weather-app:latest' 
+
+                    // Push the Docker image to Docker Hub
+                    sh 'docker push malhar0504/my-weather-app:latest'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    // Deploying the Docker image
+                    sh 'docker run -d -p 5000:5000 weather-app-v1:latest'
+                }
+            }
+        }
+    }
+}
