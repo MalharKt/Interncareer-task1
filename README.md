@@ -1,13 +1,16 @@
-Firstly, launch an EC2 instance
-With the following configuration:
+Setup Continuous Integration/Continuous
+Deployment (CI/CD) Pipeline
 
-Instance type: t2.medium
-Enable the following ports: 3000, 8080, 22, 80
-Storage: 10 GB at least
+Step 1: Launch EC2 Instance
+Launch an EC2 instance with the following configuration:
+• Instance Type: t2.medium
+• Enabled Ports: 3000, 8080, 22, 80
+• Storage: At least 10 GB
 SSH into the instance using the key pair.
 
-Jenkins Setup
-Install java : 
+Step 2: Jenkins Setup
+Install Java
+Update the package list and install Java:
 sudo apt update
 sudo apt install fontconfig openjdk-17-jre
 java -version
@@ -24,30 +27,46 @@ echo "deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc]" \
 sudo apt-get update
 sudo apt-get install jenkins
 
-• confugure and access jenkins 
-• install required pluggins
-• create a pipeline job
+• Configure and access Jenkins through the web interface.
+• Install the required plugins.
+• Create a pipeline job.
 
-Create a Sample Web Application
-• Install the necessary dependencies and run the application locally.
-• Push it to a GitHub repository.
+Step 3: Create a Sample Web Application
+• Create a sample web application.
+• Install the dependencies and run it locally.
+• Push the code to a GitHub repository.
 
-Jenkins Pipeline Setup
+Step 4: Jenkins Pipeline Setup
 • Clone the Git repository into your instance.
 • Create a Jenkins pipeline with stages like build, test, and deploy accordingly.
 
-Install Docker
+Step 5: Install Docker
+Install Docker on your EC2 instance:
 sudo apt install docker.io -y
 docker version
 
-• Integrate Jenkins with GitHub.
-• Integrate Jenkins with DockerHub.
-• Add a webhook in GitHub.
+Build the Docker image from the cloned repository using the following command:
+docker build -t <image-name> .
 
-Automation
-Automate all these steps, starting from cloning the repository to running the application using the Jenkins pipeline.
+Run the Docker image using:
+docker run -d -p portno:portno <image-name>
 
-Thank you for following along until now.
+Access the application via http://<ec2-public-ip>:8080
 
-😊 HAPPY LEARNING 😊
+Step 6: Integrate Jenkins
+• Integrate Jenkins with GitHub by connecting your repository.
+• Integrate Jenkins with DockerHub to push Docker images automatically.
+• Add a webhook in GitHub to trigger Jenkins builds on code changes.
+
+Step 7: Automate the Pipeline
+Automate the entire process from:
+
+• Cloning the repository.
+• Building the application.
+• Running the Docker container.
+• Deploying the application, all through the Jenkins pipeline.
+
+Thank you for following along! 😊
+
+🎉 Happy Learning! 🎉
 
